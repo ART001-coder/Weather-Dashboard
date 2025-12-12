@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Dashboard</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f3f5f7;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #2a7dea;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger div {
+            width: 28px;
+            height: 3px;
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background: #1d75d1;
+                width: 180px;
+                flex-direction: column;
+                gap: 0;
+                padding: 15px;
+                border-radius: 10px;
+                display: none;
+            }
+
+            nav ul.active {
+                display: block;
+            }
+
+
+            nav ul li {
+                padding: 10px 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        section {
+            padding: 90px 20px;
+        }
+
+        #home {
+            text-align: center;
+            background: #3f3de0;
+            color: white;
+            padding: 130px 20px;
+        }
+
+        #home h1 {
+            font-size: 2.7rem;
+            margin-bottom: 15px;
+        }
+
+        #home p {
+            font-size: 1.2rem;
+        }
+
+        #home p {
+            font-size: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            #home h1 {
+                font-size: 2rem;
+            }
+
+        }
+
+
+        #search {
+            text-align: center;
+        }
+
+
+        .search-box {
+            max-width: 600px;
+            margin: auto;
+            display: flex;
+            gap: 12px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 12px 22px;
+            border: none;
+            background: #1a69d1;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0d46a3;
+        }
+
+        @media (max-width: 600px) {
+            .search-box {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+
+        #weatherResult {
+            background: white;
+            max-width: 90%;
+            width: 450px;
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .location {
+            font-size: 24px;
+            color: #1770e3;
+        }
+
+        .weather-icon {
+            width: 90px;
+            height: 90px;
+        }
+
+        .weather-info p {
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .back-to-top {
+
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #439ad4;
+            color: white;
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top:hover {
+            background: #2475ab;
+        }
+
+
+        @media (max-width: 600px) {
+            #weatherResult {
+                padding: 20px;
+            }
+
+            .location {
+                font-size: 20px;
+            }
+
+            .weather-icon {
+                width: 70px;
+                height: 70px;
+            }
+        }
+
+
+        #about {
+            background: rgb(180, 38, 208);
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+
+        footer {
+            background: #2f4050;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 18px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .footer-links a:hover {
+            color: #50aae6;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <nav>
+        <div class="logo">Weather Dashboard</div>
+        <ul id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#search">Search</a></li>
+            <li><a href="#weatherDetails">Weather Details</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+
+    <section id="home">
+        <h1>Welcome to the Weather Dashboard</h1>
+        <p>Get real-time weather data for any city worldwide.</p>
+    </section>
+
+
+    <section id="search">
+        <h2>Search Weather</h2>
+
+        <div class="search-box">
+            <input type="text" id="cityInput" placeholder="Enter a city name...">
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <p class="error" id="errorMsg"></p>
+    </section>
+
+
+    <section id="weatherDetails">
+        <h2 style="text-align: center;">Weather Details</h2>
+        <div id="weatherResult">
+            <p style="text-align: center; color: #666;">Weather details will appear here.</p>
+        </div>
+    </section>
+
+
+    <section id="about">
+        <h2>About This Appication</h2>
+        <p>This interactive Weather Dashboard helps you get real-time weather information for any city..</p>
+        <p>Built with HTML, CSS, and JavaScript Fundamentals using the WeatherAPI.</p>
+    </section>
+
+
+    <footer id="footer">
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://github.com" target="_blank">GitHub</a>
+                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+            </div>
+
+            <div class="footer-links">
+                <a href="#" target="_blank">Terms & Conditions</a>
+                <a href="#" target="_blank">Privacy Policy</a>
+                <a href="#" target="_blank">Copyright Info</a>
+            </div>
+            <p>&copy; Weather Dashboard. All rights reserved.</p>
+            <p>Made by Abhyudita Tripathi</p>
+
+        </div>
+    </footer>
+    <button class="back-to-top">↑</button>
+
+    <script>
+        const API_KEY = "3fb03dbb5fab4141ad9120028251012";
+
+        const navLinks = document.getElementById('navLinks');
+        const hamburger = document.getElementById('hamburger');
+
+        hamburger.onclick = () => {
+            navLinks.classList.toggle("active");
+        };
+
+        document.querySelectorAll("nav ul li a").forEach(link => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove("active");
+                }
+            });
+        });
+
+        const backToTopBtn = document.querySelector('.back-to-top');
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        })
+
+        document.getElementById("searchBtn").addEventListener("click", getWeather);
+        document.getElementById("cityInput").addEventListener("keypress", e => {
+            if (e.key === "Enter") getWeather();
+        });
+
+        async function getWeather() {
+            const city = document.getElementById("cityInput").value.trim();
+            const errorMsg = document.getElementById("errorMsg");
+            const result = document.getElementById("weatherResult");
+
+            if (!city) {
+                errorMsg.textContent = "Please enter a city name.";
+                return;
+            }
+
+            result.innerHTML = "<p style='text-align:center;color:#666;'>Loading...</p>";
+
+            try {
+                const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${city}&days=1`);
+
+                if (!response.ok) throw new Error("Invalid response");
+
+                const data = await response.json();
+
+                if (data.error) {
+                    errorMsg.textContent = data.error.message;
+                    result.innerHTML = "";
+                    return;
+                }
+
+                const current = data.current;
+                const location = data.location;
+                const forecast = data.forecast.forecastday[0];
+
+                result.innerHTML = `
+                    <div class="location">${location.name}, ${location.country}</div>
+                    <p style="color:#666">${location.localtime.split(" ")[0]}</p>
+                    <img src="${current.condition.icon}" class="weather-icon">
+                    <h2>${current.temp_c}°C</h2>
+                    <p>${current.condition.text}</p>
+
+                    <div class="weather-info">
+                        <p><strong>Feels Like:</strong> ${current.feelslike_c}°C</p>
+                        <p><strong>Humidity:</strong> ${current.humidity}%</p>
+                        <p><strong>Wind:</strong> ${current.wind_kph} km/h</p>
+                        <p><strong>Pressure:</strong> ${current.pressure_mb} mb</p>
+                        <p><strong>Visibility:</strong> ${current.vis_km} km</p>
+                        <p><strong>UV Index:</strong> ${current.uv}</p>
+                        <p><strong>Sunrise:</strong> ${forecast.astro.sunrise}</p>
+                        <p><strong>Sunset:</strong> ${forecast.astro.sunset}</p>
+                    </div>
+                `;
+            } catch (err) {
+                errorMsg.textContent = "Unable to fetch weather. Try again.";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
